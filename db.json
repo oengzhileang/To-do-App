@@ -1,0 +1,19 @@
+{
+  "task": [
+    {
+      "id": "1",
+      "text": "Go shopping",
+      "completed": false
+    },
+    {
+      "id": "2",
+      "text": "Go to gym",
+      "completed": false
+    },
+    {
+      "id": "3",
+      "text": "Go to school",
+      "completed": false
+    }
+  ]
+}
