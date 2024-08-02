@@ -1,8 +1,9 @@
 // import React from 'react'
-import { useState, useEffect,useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 interface TodoFormComponentProps {
   addTodo: (text: string) => void;
   editingTodo: Todo | null;
+  updateTodo: (id: string, newText: string) => void;
 }
 interface Todo {
   id: string;
@@ -12,52 +13,57 @@ interface Todo {
 const TodoFormComponent: React.FC<TodoFormComponentProps> = ({
   addTodo,
   editingTodo,
+  updateTodo,
 }) => {
   const [value, setValue] = useState("");
-  const inputRef = useRef(null)
-  
+  const inputRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     if (editingTodo) {
-      setValue(editingTodo.text );  
+      setValue(editingTodo.text);
     } else {
       setValue("");
     }
   }, [editingTodo]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (value.trim()) {
-      addTodo(value.trim());
-      setValue("");
-      // fetch(`http://localhost:9000/task/`, {
-      //   method: "PUT",
-      //   body: JSON.stringify({text: }),
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      // })
+    if (editingTodo) {
+      updateTodo(editingTodo.id, value.trim());
+    } else {
+      addTodo(value);
     }
+
+    setValue("");
   };
-  const handleClick = () =>{
-      inputRef.current.focus();
-  }
+
+  const handleClick = () => {
+    inputRef.current?.focus();
+  };
+
   return (
     <>
       <form action="" className="flex  w-full" onSubmit={handleSubmit}>
-        <label htmlFor="todo" className="max-w-[590px]  w-full">
-          <input
-            className="p-5 border shadow-md border-slate-400 font-bold rounded-xl max-w-[590px] w-full"
-            type="text"
-            value={value}
-            ref={inputRef}
-            name="todo"
-            id="to "
-            onChange={(e) => setValue(e.target.value)}
-            placeholder="Write your task"
-          />
+        <label htmlFor="todo" className="  w-full">
+          <div>
+            <input
+              className="p-5 border shadow-md border-slate-400 font-bold rounded-l-lg max-w-[590px] w-full"
+              type="text"
+              value={value}
+              ref={inputRef}
+              name="todo"
+              id="to "
+              onChange={(e) => setValue(e.target.value)}
+              placeholder="Write your task"
+            />
+            <button
+              onClick={handleClick}
+              className="p-5 bg-blue-600 border shadow-md border-slate-400 text-white rounded-r-lg font-bold  "
+            >
+              {editingTodo ? `Update` : `Add task`}
+            </button>
+          </div>
         </label>
-        <button onClick={handleClick} className="p-5 bg-blue-600 text-white rounded-xl font-bold ">
-          {editingTodo ? `Update task` : `Add task`}
-        </button>
       </form>
     </>
   );
